@@ -1,20 +1,19 @@
 #include <iostream>
-#include <iomanip>
+#include <iomanip>//the thing with filling 0s is done here
 #include <cmath>
 #include <string>
 #include <functional>
 
 //main issues are that arguments in functions are not being used and there some safety additions that would be good
+//and the tangent needs to be given limits
 
 const double pi = 3.141592654;
 const int width = 80;
-float freq_chosen;
 
 class Plot{
 private://internal variables, this means you cant change these variables anywhere outside this private section (adds safety)
     double frequency;
     double phase;
-
 public:
     std::function<double(double)> SineFunc = [](double x) {return std::sin(x); };//sets an std::func MyFunc as a lambda(mini mystery function)
     std::function<double(double)> CosineFunc = [](double x) {return std::cos(x); };
@@ -25,9 +24,6 @@ public:
         : frequency(f), phase(p) {}
 
     int plotval(std::function<double(double)> a){//why not a lambda i dont know
-        //okay this is the function which x is local to
-        //when i pass set_y in here the same x is being used
-        //funcChosen is what will pass through here, as well as a x=0 default
         //argument a is currently pointless cause you odo the funcChosen directly
         unsigned long x = 0;
         while(1){
@@ -72,17 +68,6 @@ int main(){
     return 0;
 }
 
-//whats left
-
-//plot more interesting functions
-//add phase properly
-//add noise
-//do tan or something like that
-//do fourier with number of harmonics
-//make it sleep for a bit so you can keep track
-
-//could i fuse funcOutput with funcChosen? wait does funcOutput as a name serve any purpose (like could i just call it a)
-
 /*
 --------------things to research/general notes---------------
 
@@ -120,9 +105,12 @@ int main(){
 
 
     ------things to do-----------
-    -need to make that function they talked about in leture where all the variables are manually called (good practise)
     -need to make setter functions for all private variables (probably useful in the fourier bit)
     -youre gonna try to save a bit of time with a switch thingy which is pretty much like case in systemverilog
+    -plot more interesting functions
+    -add noise
+    -do fourier with number of harmonics
+    -make it sleep for a bit so you can keep track
 
 
 
