@@ -4,116 +4,72 @@
 #include <string>
 #include <functional>
 
+//main issues are that arguments in functions are not being used and there some safety additions that would be good
 
-unsigned long x = 135;
-const double pi = 3.1415926;
-//note that y = sin(x * (pi/180))
-float y = 0.5 * sin(x * (pi/180)) + 0.5;
+const double pi = 3.141592654;
 const int width = 80;
 float freq_chosen;
 
-
-
-//so if you do MyFunc(x) its gonna sin it
-    //i think this sets a function that enters and exits with a double number
-    //
-
-
-//start trying to get classes going
-
-
-class plot{
+class Plot{
 private://internal variables, this means you cant change these variables anywhere outside this private section (adds safety)
     double frequency;
     double phase;
+
 public:
     std::function<double(double)> SineFunc = [](double x) {return std::sin(x); };//sets an std::func MyFunc as a lambda(mini mystery function)
     std::function<double(double)> CosineFunc = [](double x) {return std::cos(x); };
     std::function<double(double)> TangentFunc = [](double x) {return std::tan(x); };
+    std::function<double(double)> funcChosen; //this is just storage, well set the above to funcChosen then plotval(funcChosen)
 
-    int plotval1(std::function<double(double)> f){
-        //gpt says i dont need to pass phase and frequency i can still use them here
+    Plot(double f, double p)//constructor function
+        : frequency(f), phase(p) {}
 
+    int plotval(std::function<double(double)> a){//why not a lambda i dont know
+        //okay this is the function which x is local to
+        //when i pass set_y in here the same x is being used
+        //funcChosen is what will pass through here, as well as a x=0 default
+        //argument a is currently pointless cause you odo the funcChosen directly
+        unsigned long x = 0;
+        while(1){
+            double y =  0.5 * funcChosen(frequency * x * (pi/180) + phase) + 0.5 ;
+            std::cout << "x: " << std::setfill ('0') << std::setw(7) << x;      
+            std::cout << "  y: " << std::fixed << std::setprecision(4) << y;//std::fixed is what is forcing the trailing zeros
+            int space_num = y * width;//truncates multiplication to find the number of spaces
+            if((x + 45) % 90 == 0){//the labelled line thingy they asked for some reason
+                std::cout << "---";
+            }
+            else std::cout << "   ";
+            for(int i = 0; i < space_num; i++){
+                std::cout << " ";
+            }
+            std::cout << "*\n";//the actual asterisk you see
+            x++;
+        }
     }
-    void setfreq(){
+    void setfreq(double newFreq){frequency = newFreq;}
+    void setphase(double newPhase){phase = newPhase;}
 
+    void chooseFunc(int choice){//func chosen shouldnt be an int, remember with std::function you can store functions in variables
+        switch(choice){//"choice" is what is being compared to all of the numbers, funcChosen stores the result for us to then plot the correct function
+        case 1: funcChosen = SineFunc; break;
+        case 2: funcChosen = CosineFunc; break;
+        case 3: funcChosen = TangentFunc; break;
+        }
     }
-    void setphase(){
-
-    }
-    
-    //since the frequency and phase are being put in private i should make caller functions for freq and phase
 };
 
-int plotval(float range, int width){
-    //you get the range and multiply it by the width, and then truncate it
-    int space_num = range * width;
-    if ((x+45) % 90 == 0){
-        std::cout << "---";
-    }
-    else std::cout << "   ";
-    for(int i = 0; i < space_num; i++){
-        std::cout << " ";
-    }
-    std::cout << "*\n";
-    return 0;
-}
-int printsin(float freq){
-    while(1){
-        //in order to print the first n characters of an unsigned long integer we first need to convert it to a string
-        //acc no you just use the setw function, std::setw(6)
-        //note setw will be ignored if the number is too big
-        //note double quotes is a string literal and single quotes is a character literal, i didn't know that
-
-        std::cout << "x: " << std::setfill ('0') << std::setw(7) << x;
-        //std::fixed is what is forcing the trailing zeros
-        std::cout << "  y: " << std::fixed << std::setprecision(4) << y;
-        x++;
-        y = 0.5 * sin(freq * x * (pi/180)) + 0.5;
-
-        plotval(y, width);
-    }
-}
-
-int printcos(float freq){
-    while(1){
-        //in order to print the first n characters of an unsigned long integer we first need to convert it to a string
-        //acc no you just use the setw function, std::setw(6)
-        //note setw will be ignored if the number is too big
-        //note double quotes is a string literal and single quotes is a character literal, i didn't know that
-
-        std::cout << "x: " << std::setfill ('0') << std::setw(7) << x;
-        //std::fixed is what is forcing the trailing zeros
-        std::cout << "  y: " << std::fixed << std::setprecision(4) << y;
-        x++;
-        y = 0.5 * cos(freq * x * (pi/180)) + 0.5;
-
-        plotval(y, width);
-    }
-}
-
-
 int main(){
+    int inputFunc, inputFreq, inputPhase;
 
+    std::cout << "Please select a function, frequency and phase" << std::endl;
+    std::cout << "1:   sine\n2:   cosine\n3:   tangent" << std::endl;
+    std::cin >> inputFunc >> inputFreq >> inputPhase;
 
-    std::cout << "Please select a function" << std::endl;
-    std::cout << "1:   sine\n2:   cosine" << std::endl;
-    std::cin >> func_type;
+    Plot func1(inputFreq, inputPhase);
+    func1.chooseFunc(inputFunc);
+    func1.plotval(func1.funcChosen);
 
-    if (func_type == 1){
-        std::cout << "What would you like as your frequency?";
-        std::cin >> freq_chosen;
-        printsin(freq_chosen);
-    }
-    else if(func_type == 2){//i should probably create a struct or something to avoid all the if statements, idk how to do that yet
-        std::cout << "What would you like as your frequency?";
-        std::cin >> freq_chosen;
-        printsin(freq_chosen);
-    }
-
-    plot cosine
-
-
+    return 0;
 }
 
 //whats left
@@ -124,6 +80,8 @@ int main(){
 //do tan or something like that
 //do fourier with number of harmonics
 //make it sleep for a bit so you can keep track
+
+//could i fuse funcOutput with funcChosen? wait does funcOutput as a name serve any purpose (like could i just call it a)
 
 /*
 --------------things to research/general notes---------------
@@ -146,6 +104,8 @@ int main(){
     this is prob valid cause ill use it again in the fourier transoform, it just approximates a wave
     now you have to find out how to call a function and set a function as a variable
 
+-remember that OutputFunc is just gonna be a parameter for you to later put in input (like SineFunc)
+
 
 
     ---lambda and std::func---
@@ -162,6 +122,7 @@ int main(){
     ------things to do-----------
     -need to make that function they talked about in leture where all the variables are manually called (good practise)
     -need to make setter functions for all private variables (probably useful in the fourier bit)
+    -youre gonna try to save a bit of time with a switch thingy which is pretty much like case in systemverilog
 
 
 
