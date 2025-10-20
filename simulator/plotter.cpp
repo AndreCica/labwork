@@ -4,49 +4,52 @@
 #include <string>
 #include <functional>
 
-//main issues are that arguments in functions are not being used and there some safety additions that would be good
-//and the tangent needs to be given limits
-
 const double pi = 3.141592654;
 const int width = 80;
 
 class Plot{
-private://internal variables, this means you cant change these variables anywhere outside this private section (adds safety)
+private://here im setting internal variables, this means you cant change these variables anywhere outside this private section (it adds safety)
     double frequency;
     double phase;
 public:
-    std::function<double(double)> SineFunc = [](double x) {return std::sin(x); };//sets an std::func MyFunc as a lambda(mini mystery function)
+    std::function<double(double)> SineFunc = [](double x) {return std::sin(x); };
     std::function<double(double)> CosineFunc = [](double x) {return std::cos(x); };
     std::function<double(double)> TangentFunc = [](double x) {return std::tan(x); };
-    std::function<double(double)> funcChosen; //this is just storage, well set the above to funcChosen then plotval(funcChosen)
+    std::function<double(double)> funcChosen; 
+    //these 4 are basically defining lambdas using std::function. its a compact way of making it so you can pass a function as an argument
+    //the idea is that the user selects one of these 4 functions, then i pass them in as my argument to the plotter function
+    //its just more compact. you can equally just say if the user presses 1 then do sine
 
-    Plot(double f, double p)//constructor function
+    Plot(double f, double p)//constructor function, initializes frequency and phase when the function is called
         : frequency(f), phase(p) {}
 
-    int plotval(std::function<double(double)> a){//why not a lambda i dont know
+    void plotval(std::function<double(double)> a){
         //argument a is currently pointless cause you odo the funcChosen directly
         unsigned long x = 0;
         while(1){
             double y =  0.5 * funcChosen(frequency * x * (pi/180) + phase) + 0.5 ;
+
             std::cout << "x: " << std::setfill ('0') << std::setw(7) << x;      
             std::cout << "  y: " << std::fixed << std::setprecision(4) << y;//std::fixed is what is forcing the trailing zeros
-            int space_num = y * width;//truncates multiplication to find the number of spaces
-            if((x + 45) % 90 == 0){//the labelled line thingy they asked for some reason
+
+            int space_num = y * width;//this finds the amount of spaces you need before putting the asterisk
+            if((x + 45) % 90 == 0){//this puts dashes every 10 lines
                 std::cout << "---";
             }
             else std::cout << "   ";
             for(int i = 0; i < space_num; i++){
                 std::cout << " ";
             }
-            std::cout << "*\n";//the actual asterisk you see
+            std::cout << "*\n";//the actual asterisk you see that plots the wave
             x++;
         }
     }
     void setfreq(double newFreq){frequency = newFreq;}
     void setphase(double newPhase){phase = newPhase;}
+    //these functions allow you to set the private variables from the plot class (if you try and set frequency = 30; in the code it wont work)
 
-    void chooseFunc(int choice){//func chosen shouldnt be an int, remember with std::function you can store functions in variables
-        switch(choice){//"choice" is what is being compared to all of the numbers, funcChosen stores the result for us to then plot the correct function
+    void chooseFunc(int choice){
+        switch(choice){
         case 1: funcChosen = SineFunc; break;
         case 2: funcChosen = CosineFunc; break;
         case 3: funcChosen = TangentFunc; break;
@@ -111,6 +114,8 @@ int main(){
     -add noise
     -do fourier with number of harmonics
     -make it sleep for a bit so you can keep track
+    -clean up tan with limits
+    -make it so the function arguments arent being useless
 
 
 
