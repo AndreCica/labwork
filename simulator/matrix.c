@@ -12,7 +12,26 @@
 
 Matrix createMatrix(const unsigned int nRows, const unsigned int nCols)
 {
-	/* TODO */
+	Matrix m;
+	unsigned int i;
+
+	m.rows = nRows;
+	m.cols = nCols;
+
+	m.element = (double **)malloc(nRows * sizeof(double *));
+	if (m.element == NULL) {
+		fprintf(stderr, "Memory allocation failed for row pointersz\n");
+		exit (EXIT_FAILURE);
+	}
+
+	for(i = 0; i < nRows; i++) {
+		m.element[i] = (double *)malloc(nCols * sizeof(double));
+		if (m.element[i] == NULL) {
+			fprintf(stderr, "Memory allocation failed for row%d\n", i);
+			exit(EXIT_FAILURE);
+		}
+	}
+	return m;
 }
 
 Matrix createMatrixFromFile(const char *filename)
@@ -55,7 +74,21 @@ Matrix createMatrixFromFile(const char *filename)
 
 void destroyMatrix(Matrix mat)
 {
-	/* TODO */
+	unsigned int i;
+
+	if (mat.element != NULL){
+
+		for (i = 0; i < mat.rows; i++;){
+			if(mat.element[i] != NULL){
+				free(mat.element[i]);
+			}
+		}
+		free(mat.element);
+	}
+
+	mat.element = NULL;
+	mat.rows = 0;
+	mat.cols = 0;
 }
 
 void printMatrix(const Matrix mat)

@@ -12,7 +12,16 @@
 
 Vector createVector(const unsigned int nLength)
 {
-	/* TODO */
+    Vector v;
+    
+    v.length = nLength;
+    v.element = (double *)malloc(nLength * sizeof(double));
+    if (v.element == NULL) {
+        fprintf(stderr, "Memory allocation failed for vector elements\n");
+        exit(EXIT_FAILURE);
+    }
+    
+    return v;
 }
 
 Vector createVectorFromFile(const char *filename)
@@ -41,7 +50,9 @@ Vector createVectorFromFile(const char *filename)
 
 void destroyVector(Vector vec)
 {
-	/* TODO */
+    if (vec.element != NULL) {
+        free(vec.element);
+    }
 }
 
 void printVector(const Vector vec)

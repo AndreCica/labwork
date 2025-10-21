@@ -12,7 +12,9 @@
 /* Data structure */ 
 
 typedef struct {
-	/* TODO */
+    unsigned int rows;
+    unsigned int cols;
+    double **element;
 } Matrix;
 
 /* Interfaces */
