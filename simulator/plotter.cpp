@@ -116,11 +116,4 @@ int main(){
     -make it sleep for a bit so you can keep track
     -clean up tan with limits
     -make it so the function arguments arent being useless
-
-
-
-
-
-
-
 */
