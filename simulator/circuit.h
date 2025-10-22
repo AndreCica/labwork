@@ -1,12 +1,3 @@
-/*
- *         File: circuit.h
- *       Author: Steve Gunn
- *      License: MIT License
- *         Date: 27th October 2018
- *  Description: Data structures and interfaces for modified nodal analysis of a circuit containing 
- *               voltage sources, current sources and resistors.
- */
-
 #ifndef _CIRCUIT_H
 #define _CIRCUIT_H
 

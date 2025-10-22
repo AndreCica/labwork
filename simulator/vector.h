@@ -1,18 +1,11 @@
-/*
- *         File: vector.h
- *       Author: Steve Gunn
- *      License: MIT License
- *         Date: 27th October 2018
- *  Description: Data structures and interfaces for operations on vectors.
- */
-
-#ifndef _VECTOR_H
+#ifndef _VECTOR_H//oh so this all checks if a macro has been defined, then defines a macro to make sure that the header file is being put in once and once only
 #define _VECTOR_H
 
 /* Data structure */ 
 
 typedef struct {
-	/* TODO */
+    unsigned int length;
+    double *element;
 } Vector;
 
 /* Interfaces */

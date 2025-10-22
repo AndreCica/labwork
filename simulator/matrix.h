@@ -1,13 +1,5 @@
-/*
- *         File: matrix.h
- *       Author: Steve Gunn
- *      License: MIT License
- *         Date: 27th October 2018
- *  Description: Data structures and interfaces for operations on matrices.
- */
-
 #ifndef _MATRIX_H
-#define _MATRIX_H
+#define _MATRIX_H 
 
 /* Data structure */ 
 

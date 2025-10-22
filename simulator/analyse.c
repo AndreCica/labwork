@@ -1,11 +1,3 @@
-/*
- *         File: analyse.c
- *       Author: Steve Gunn
- *      License: MIT License
- *         Date: 27th October 2018
- *  Description: Program to read in a netlist file of a circuit, perform modified nodal analysis and display the result.
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "circuit.h"

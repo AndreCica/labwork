@@ -1,12 +1,3 @@
-/*
- *         File: circuit.c
- *       Author: Steve Gunn
- *      License: MIT License
- *         Date: 27th October 2018
- *  Description: Implementation for modified nodal analysis on a circuit containing 
- *               voltage sources, current sources and resistors.
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "circuit.h"
