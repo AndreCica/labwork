@@ -21,10 +21,10 @@ public:
         values = c;
     }
 
-    void printMatrix(std::vector<std::vector<double>> d){
+    void printMatrix(){
         for(int i = 0; i < numRows; i++){
             for(int j = 0; j < numCols; j++){
-                std::cout << d[i][j] << " ";
+                std::cout << values[i][j] << " ";
             }
             std::cout << std::endl;
         }
@@ -32,15 +32,33 @@ public:
 
     void setMatrix(std::vector<std::vector<double>> a){
         values = a;
+        //im not completely sure if this is necessary anymore
     }
 
-    Matrix multMat(Matrix matA, Matrix matB){
-        Matrix solution(matA.numRows, matB.numCols);
-        if(matA.numCols == matB.numRows){
-            for (int i = 0; i < matA.numRows; i++){//as long as theres still rows in A (the ones going down)
+    Matrix copyMatrix(Matrix mat){//remember that Matrix is the return type
+        Matrix copyMat(mat.numRows, mat.numCols);
+        copyMat.values = mat.values;
+        //im not sure if it is necessary to copy over the numRows and numCols if the values are ther
+        //ig you would end up having to construct it manually to do that again which might be a hassle at runtime
+        copyMat.numRows = mat.numRows;
+        copyMat.numCols = mat.numCols;
+        return copyMat;
+        //i think this still works cause you have the function you are calling from which you wanna change
+        //and the argument is the one you wanna change it to
+        //like if you have a empty newMat and you wanna put 
+        //check if you should do passing by reference in this one
+    }
+
+    Matrix operator*(const Matrix& matB){//you are using this-> instead of the matA.numRows or whatever cause you wanna keep the func inside
+        //const makes sure that you wont avoid copying
+        //you replaced matA.anything with anything cause of the this thing
+        //passing by reference just tends to save a bit of time
+        Matrix solution(numRows, matB.numCols);
+        if(numCols == matB.numRows){
+            for (int i = 0; i < numRows; i++){//as long as theres still rows in A (the ones going down)
                 for(int j = 0; j < matB.numCols; j++){//as long as theres columns
-                    for(int k = 0; k < matA.numCols; k++){//columns in A and rows in B i think
-                        solution.values[i][j] += matA[i][k] * matB[k][j];
+                    for(int k = 0; k < numCols; k++){//columns in A and rows in B i think
+                        solution.values[i][j] += values[i][k] * matB.values[k][j];
                     }
                 }
 
@@ -50,26 +68,42 @@ public:
             std::cout << "Error: Your matrices cannot me multiplied :(";
         }
         return solution;
+        //if you feel like it you can change this for a more efficient algorithm later
     }
-    //if you feel like it you can change this for a more efficient algorithm later
 
+    Matrix operator*(const double& scalar){
+        Matrix solution(numRows, numCols);//this is cause multiplying by a scalar doesnt change the dimensions
+        for(int i; i < numRows; i++){
+            for(int j; j < numCols; j++){
+                solution.values[i][j] = solution.values[i][j] * scalar;
+            }
+        }
+        return solution;
+    }
 
+    //Matrix operator*()
 };
 
 int main() {
     int rowInput1, colInput1, rowInput2, colInput2;
 
     std::cout << "Hello World!" << "\n";
-    std::cout << "what rows and columns would you like in your matrix?\n";
-    std::cin >> rowInput1 >> colInput1;
+    //std::cout << "what rows and columns would you like in your matrix?\n";
+    //std::cin >> rowInput1 >> colInput1;
 
-    Matrix firstmat(rowInput1, colInput2);
+    Matrix mat1(std::vector<std::vector<double>> {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});//this constructs the matrix
+    Matrix mat2(std::vector<std::vector<double>> {{4, 1, 5}, {9, 2, 6}, {5, 3, 5}});
+    //this stems from a misunderstanding on the relationship between the 2d vectors and the matrix objects
+    //a mat object is not a matrix in itself, but it contains a matrix in its value variable, a variable which is an array or smth like that
 
-    std::vector<std::vector<double>> mat1 = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
-    std::vector<std::vector<double>> mat2 = {{4, 1, 5}, {9, 2, 6}, {5, 3, 5}};
-    firstmat.multMat(mat1, mat2);
-    firstmat.printMatrix(3, 3);
+    Matrix solMat = mat1 * mat2;//i think this solves the issue about the returning value, cause you set it as something else right here
+    //solMat has got everything you need, and since you made it in runtime its here as long as you want as well
 
+    solMat.printMatrix();
+
+    
+
+    //you can define a matrix c as the solution of a multiplied by b, it feels so easy but so out of reach :(
 }
 
 
@@ -97,6 +131,7 @@ int main() {
 
 
 
+
 -------------------more things to do-----------------------------------------
 -make a matrix multiplication and addition function using operator overloading
 -start with research on operator overloading
@@ -104,6 +139,11 @@ int main() {
     on wikipeida
 -make it so that the initial values for the class, like the member variables are eventually the depth and width of the network maybe??
 -you need to find out how to print the weightMatrix and solution one
+-maybe you need to find a way to copy a matrix to somewhere new
+-find out how you are supposed to deal with the matrix being returned, like can you save it to another matrix (maybe update the copy file)
+    or maybe you can save it, idk if the copy matrix works then you are probably good to move on
+    -maybe you are gonna need to copy it to somewhere else, or use it to update the other matrices like weight, bias etc
+-sort out the error saving thing, like it shouldnt return a matrix if you multiply two invalid ones, the program should stop
 
 
 
