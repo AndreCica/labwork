@@ -2,6 +2,8 @@
 #include <cmath>
 #include <string>//bro let me live
 #include <vector>
+#ifndef MATRIX_H
+#define MATRIX-H
 
 class Matrix{
 private:
@@ -49,7 +51,7 @@ public:
         //check if you should do passing by reference in this one
     }
 
-    Matrix operator*(const Matrix& matB){//you are using this-> instead of the matA.numRows or whatever cause you wanna keep the func inside
+    Matrix operator*(const Matrix& matB){//matrix to matrix multiplication
         //const makes sure that you wont avoid copying
         //you replaced matA.anything with anything cause of the this thing
         //passing by reference just tends to save a bit of time
@@ -71,40 +73,34 @@ public:
         //if you feel like it you can change this for a more efficient algorithm later
     }
 
-    Matrix operator*(const double& scalar){
+    Matrix operator*(const double& scalar){//scalar to matrix multiplication
         Matrix solution(numRows, numCols);//this is cause multiplying by a scalar doesnt change the dimensions
-        for(int i; i < numRows; i++){
-            for(int j; j < numCols; j++){
+        for(int i = 0; i < numRows; i++){
+            for(int j = 0; j < numCols; j++){
                 solution.values[i][j] = solution.values[i][j] * scalar;
             }
         }
         return solution;
     }
 
-    //Matrix operator*()
+    Matrix operator+(const Matrix& matB){//matrix addition
+        Matrix solution(numRows, numCols);
+        if(numRows == matB.numRows && numCols == matB.numCols){
+            for(int i = 0; i < numRows){
+                for(int j = 0; j < numCols; j++){
+                    solution.values[i][j] = values[i][j] + matB.values[i][j];
+                }
+            }
+        }
+        else{
+            std::cout << "Your matrices cannot be added :(\n";
+        }
+        return solution;
+    }
+
 };
 
-int main() {
-    int rowInput1, colInput1, rowInput2, colInput2;
-
-    std::cout << "Hello World!" << "\n";
-    //std::cout << "what rows and columns would you like in your matrix?\n";
-    //std::cin >> rowInput1 >> colInput1;
-
-    Matrix mat1(std::vector<std::vector<double>> {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});//this constructs the matrix
-    Matrix mat2(std::vector<std::vector<double>> {{4, 1, 5}, {9, 2, 6}, {5, 3, 5}});
-    //this stems from a misunderstanding on the relationship between the 2d vectors and the matrix objects
-    //a mat object is not a matrix in itself, but it contains a matrix in its value variable, a variable which is an array or smth like that
-
-    Matrix solMat = mat1 * mat2;//i think this solves the issue about the returning value, cause you set it as something else right here
-    //solMat has got everything you need, and since you made it in runtime its here as long as you want as well
-
-    solMat.printMatrix();
-
-    
-
-    //you can define a matrix c as the solution of a multiplied by b, it feels so easy but so out of reach :(
-}
+#endif
 
 
 
@@ -133,17 +129,20 @@ int main() {
 
 
 -------------------more things to do-----------------------------------------
--make a matrix multiplication and addition function using operator overloading
--start with research on operator overloading
+*make a matrix multiplication and addition function using operator overloading
+*start with research on operator overloading
 -eventually it would be good to optimise the matrix multiplication function so that it takes less time, like the fancy ones that you found
     on wikipeida
 -make it so that the initial values for the class, like the member variables are eventually the depth and width of the network maybe??
--you need to find out how to print the weightMatrix and solution one
--maybe you need to find a way to copy a matrix to somewhere new
--find out how you are supposed to deal with the matrix being returned, like can you save it to another matrix (maybe update the copy file)
+*you need to find out how to print the weightMatrix and solution one
+*maybe you need to find a way to copy a matrix to somewhere new
+*find out how you are supposed to deal with the matrix being returned, like can you save it to another matrix (maybe update the copy file)
     or maybe you can save it, idk if the copy matrix works then you are probably good to move on
     -maybe you are gonna need to copy it to somewhere else, or use it to update the other matrices like weight, bias etc
 -sort out the error saving thing, like it shouldnt return a matrix if you multiply two invalid ones, the program should stop
+-make a random number generator, for a generate random number matrix function given inputs
+-make this a header file
+-you need to make a transposer thingy
 
 
 
