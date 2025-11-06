@@ -14,6 +14,7 @@ std::vector<int> setVector(int vector_length){
 
 int main(){
     int inputNum, neuronNum, weightNum, outputNum;
+    double input1, input2;
     weightNum = neuronNum * inputNum;
     //we are just doing one layer for now
 
@@ -37,39 +38,41 @@ int main(){
     //okay so for
 
     //am i supposed to take the matrix from the long line of vectors of vectors of vectors or initialized
-    Matrix inputMat(inputNum, 1);
+   
+    Matrix inputMat(1, inputNum);
     Matrix weightMat1(neuronNum, inputNum);
+    weightMat1 = weightMat1.setRandMatrix();
     Matrix weightMat2(outputNum, neuronNum);
-    Matrix bias1(inputNum, 1);
-    Matrix bias2(neuronNum, 1);
+    weightMat2 = weightMat2.setRandMatrix();
+    Matrix bias1(neuronNum, 1);
+    bias1 = bias1.setRandMatrix();
+    Matrix bias2(outputNum, 1);
+    bias2 = bias2.setRandMatrix();
+    Matrix neuronMat(neuronNum, 1);
     Matrix outputMat(outputNum, 1);
 
+    std::cout << "What would you like your 2 inputs to be\n";
+    std::cin >> input1 >> input2;
+    
+    
+    //remember to allow for multiple inputs soon
+    std::vector<double>inMat = {input1, input2};
+    inputMat = inMat;
 
-    Matrix testMat1({{1, 0, 1}, {0, 1, 0}, {1, 0, 1}});
-    Matrix testMat2({{2, 2, 2}, {2, 2, 2}, {2, 2, 2}});
+    //this is the start of the feed forward - layer1
+    inputMat = inputMat.transposeMatrix();
+    neuronMat = (weightMat1 * inputMat) + bias1;
+    neuronMat.printMatrix();
+    neuronMat = neuronMat.sigmoid();
+    neuronMat.printMatrix();
 
-    Matrix randOutput(3, 3);
-    randOutput = randOutput.setRandMatrix();
-
-    randOutput.printMatrix();
-    testMat1.printMatrix();
-    Matrix MatT = testMat1.transposeMatrix();
-    MatT.printMatrix();
-    testMat1.printMatrix();
-    MatT = (testMat1 * testMat2);
-    MatT.printMatrix();
-
-    //i think instead of all these matrix functions you just need to have functions that get passed values by reference and change them
-
-
-
+    //layer2
+    outputMat = (weightMat2 * neuronMat) + bias2;
+    outputMat.printMatrix();
+    outputMat = outputMat.softmax();
+    outputMat.printMatrix();
 
     
-
-
-
-
-    //Matrix inputVector()
 
     return 0;
 
@@ -124,7 +127,8 @@ int main() {
     -you can even do it from a set input and output combination, or stuff in the code
     -afterwards you should make it completely automatic based on inputs
 -find out how to do the thing from before with std::function and lambda to pass a function into the program so u can switch sigmoid and shi
-
+-you should set the input matrix using a loop and .pushback() so that you can add more inputs easily
+    -also remember for the dynamic memory thing, it would probably work cause you have set input and output matrices, and the rest are equal size
 
 -----simple todo----
 -test random

@@ -5,6 +5,7 @@
 #include <ctime>
 #ifndef MATRIX_H
 #define MATRIX_H
+#define E 2.718281828459045235360287471
 
 class Matrix{
 private:
@@ -62,7 +63,7 @@ public:
         }
     }
 */
-    
+
     Matrix setRandMatrix(){
         Matrix randomMat(numRows, numCols);
         std::srand(std::time(nullptr));
@@ -90,6 +91,32 @@ public:
         }
         return flippedMat;
         //i have more of a feeling that im not going to need to specify the number of rows and columns every time
+    }
+
+    Matrix sigmoid(){
+        Matrix activeMat(numRows, numCols);
+        for(int i = 0; i < numRows; i++){
+            for(int j = 0; j < numCols; j++){
+                activeMat.values[i][j] = 1 / (1 + std::pow(E, -1 * values[i][j]));
+            }
+        }
+        return activeMat;
+    }
+
+    Matrix softmax(){
+        Matrix activated(numRows, numCols);
+        double denominatorSum = 0;
+        for(int i = 0; i < numRows; i++){
+            for(int j = 0; j < numCols; j++){
+               denominatorSum += std::pow(E, values[i][j]);
+            }
+        }
+        for(int i = 0; i < numRows; i++){
+            for(int j = 0; j < numCols; j++){
+                activated.values[i][j] = (std::pow(E, values[i][j]))/(denominatorSum);
+            }
+        }
+        return activated;
     }
 
     Matrix copyMatrix(Matrix mat){//remember that Matrix is the return type
