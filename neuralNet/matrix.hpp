@@ -119,6 +119,48 @@ public:
         return activated;
     }
 
+    Matrix hadamard(Matrix a){
+        Matrix result(numRows, numCols);
+        for(int i = 0; i < numRows; i++){
+            for(int j = 0; j < numCols; j++){
+                result.values[i][j] = values[i][j] * a.values[i][j];
+            }
+        }
+        return result;
+    }
+
+    double crossEntropyLoss(Matrix trueClass){
+        //this only works if both the vectors are standing up
+        //this needs to multiply the activated answer vector with 
+        double loss = 0;
+        for(int i = 0; i < numRows; i++){
+            loss += trueClass.values[i][0] * log(values[i][0]);
+        }
+        loss *= -1;
+        return loss;
+        //im worried about whether this works btw
+    }
+
+    Matrix takeRow(int n){
+        Matrix newRow(numRows, 1);
+        for(int i = 0; i < numCols; i++){
+            newRow.values[i][0] = values[n][i];
+        }
+        //hopefully this will return just the necessary nth row of a matrix, as a standing up one btw
+        return newRow;
+    }
+
+    /*
+    Matrix initializeBinaryInputMatrix(){
+        for(int i = 0; i < numRows; i++){
+            values[i] = {}
+
+        }
+        //okay im thinking of doing a standing up function, like the columns are each 10, 11, 00, 01
+    //you can resume this when you remember what exactly you were trying to accomplish with this function
+    }
+    */
+    
     Matrix copyMatrix(Matrix mat){//remember that Matrix is the return type
         Matrix copyMat(mat.numRows, mat.numCols);
         copyMat.values = mat.values;
@@ -179,6 +221,8 @@ public:
         }
         return solution;
     }
+
+    
 
 };
 

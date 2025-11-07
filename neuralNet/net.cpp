@@ -24,6 +24,8 @@ int main(){
     std::cin >> neuronNum;
     std::cout << "how many outputs would you like?\n";
     std::cin >> outputNum;
+    
+    
     /*
     std::cout << "You are using " << inputNum << "inputs, " << outputNum << "outputs, and " << neuronNum << "Neurons in your hidden layer\n";
     std::cout << "your input matrix is " << inputNum << "x" << "1" << "\n";
@@ -35,10 +37,8 @@ int main(){
     weightNum = neuronNum * inputNum;
 
 
-    //okay so for
-
-    //am i supposed to take the matrix from the long line of vectors of vectors of vectors or initialized
-   
+    
+    //setting all matrices and randomising the necessary ones (double 0 to 1)
     Matrix inputMat(1, inputNum);
     Matrix weightMat1(neuronNum, inputNum);
     weightMat1 = weightMat1.setRandMatrix();
@@ -53,26 +53,60 @@ int main(){
 
     std::cout << "What would you like your 2 inputs to be\n";
     std::cin >> input1 >> input2;
-    
-    
-    //remember to allow for multiple inputs soon
     std::vector<double>inMat = {input1, input2};
     inputMat = inMat;
+
+    //the iterator for each training loop
+    int n = 0;
+    
+    
+
+    //Matrix trueClass(outputNum, std::pow(2, inputNum));//you need to set this for each training session i think
+    //Matrix superInputMat(inputNum, std::pow(2, inputNum));//eventually transition to this, or even just set it manually idc
+
+    
+    Matrix trueClass({
+        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0}, 
+        {0, 1, 0, 0, 0, 0, 0, 0, 0, 0}, 
+        {0, 0, 1, 0, 0, 0, 0, 0, 0, 0}, 
+        {0, 0, 0, 1, 0, 0, 0, 0, 0, 0}, 
+        {0, 0, 0, 0, 1, 0, 0, 0, 0, 0}, 
+        {0, 0, 0, 0, 0, 1, 0, 0, 0, 0}, 
+        {0, 0, 0, 0, 0, 0, 1, 0, 0, 0}, 
+        {0, 0, 0, 0, 0, 0, 0, 1, 0, 0}, 
+        {0, 0, 0, 0, 0, 0, 0, 0, 1, 0}, 
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 1}});
+
+    //were starting off doing only 2 inputs
+    Matrix superInputMat({{0, 0}, {0, 1}, {1, 0}, {1, 1}});
 
     //this is the start of the feed forward - layer1
     inputMat = inputMat.transposeMatrix();
     neuronMat = (weightMat1 * inputMat) + bias1;
-    neuronMat.printMatrix();
-    neuronMat = neuronMat.sigmoid();
-    neuronMat.printMatrix();
+    Matrix activeMat1 = neuronMat.sigmoid();
+    
 
     //layer2
     outputMat = (weightMat2 * neuronMat) + bias2;
-    outputMat.printMatrix();
-    outputMat = outputMat.softmax();
-    outputMat.printMatrix();
+    Matrix activeMat2 = outputMat.softmax();
 
+    //loss calculation
+    double loss = outputMat.crossEntropyLoss(trueClass);
     
+    //backpropagation1
+    Matrix classRow = trueClass.takeRow(n); //taking the first row of real solution
+    Matrix delta2 = outputMat + (classRow * -1);
+
+    //finding del W and b
+    Matrix delW2 = delta2 * (activeMat1.transposeMatrix());
+    Matrix delb2 = delta2;
+
+    //delta 1 i forgot what this means
+    //everything must be the right way round cause all my vectors are standing up automatically
+
+    Matrix calcBuffer = delW2.transposeMatrix() * delta2;
+    Matrix delta1 = calcBuffer.hadamard(activeMat1 * (1 + (activeMat1 * -1));
+
 
     return 0;
 
